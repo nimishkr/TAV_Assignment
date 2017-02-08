@@ -4,13 +4,13 @@ import static org.junit.Assert.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-public class ParkCarSystemTest {
-	ParkCarSystem car;
+public class CarTest {
+	Car car;
 	
 	@Before
 	public void setUp(){
 		
-		car = new ParkCarSystem();
+		car = new Car();
 	
 	}
 	
