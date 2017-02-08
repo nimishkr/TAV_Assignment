@@ -5,7 +5,7 @@ import java.util.Random;
  * Created by Nimish on 28/01/2017.
  */
 public class Car implements ParkCar{
-    public Street street;
+    private int streetLength;
     private boolean isEmpty;
     private String status;
     private ArrayList<Double> arr;
@@ -17,7 +17,6 @@ public class Car implements ParkCar{
        this.arr = new ArrayList<>();
        this.checkSpace = new ArrayList<>();
    }
-
     class sensorValues{
         int sensor1;
         int sensor2;
@@ -29,14 +28,14 @@ public class Car implements ParkCar{
 
     @Override
     public void moveForward() {
-        if(this.street.length < 1){
+        if(this.streetLength < 1){
             System.out.println("Cant go forward");
         }
         if (this.status.equals("Parked") ){
             System.out.println("Cant go forward");
         }
         else {
-            this.street.length--;
+            this.streetLength--;
         }
     }
 
@@ -73,7 +72,7 @@ public class Car implements ParkCar{
 
     @Override
     public CarPosition whereIs() {
-        CarPosition pos = new CarPosition(this.street.length, this.status);
+        CarPosition pos = new CarPosition(this.streetLength, this.status);
         return pos;
     }
     public boolean isParkingSpace(){
