@@ -8,40 +8,45 @@ public class Car implements ParkCar{
     private CarSituation carPos;
     private PositionInfo posInfo;
     private int isEmptyCounter;
-    private ArrayList<Double> arr;
-    private ArrayList<Boolean> checkSpace;
     private ArrayList<Integer> parkingSpaces;
 
    public Car(){
-       carPos = new CarSituation(500,"unparked");
        this.parkingSpaces = new ArrayList<>();
-       this.posInfo = new PositionInfo(this.carPos.position,parkingSpaces);
+       carPos = new CarSituation(500,false);
+       this.posInfo = new PositionInfo(this.carPos.streetPosition,parkingSpaces);
        this.isEmptyCounter = 0;
-       this.arr = new ArrayList<>();
-       this.checkSpace = new ArrayList<>();
    }
-
 
     @Override
     public PositionInfo moveForward() {
         if(this.carPos.getPosition() < 1){
             System.out.println("Cant go forward");
         }
-        if (this.carPos.getStatus().equals("parked") ){
-            System.out.println("Cant go forward");
+        if (this.carPos.isParked){
+            System.out.println("Cant go forward please unpark");
         }
         else {
-            this.carPos.position --;
+            this.carPos.streetPosition --;
             isEmpty();
         }
-        return(posInfo);
+        return this.posInfo;
+    }
+    @Override
+    public PositionInfo moveBackward() {
+        if (this.carPos.getPosition()==500){
+            System.out.println("Cant move back");
+        }
+        if (this.carPos.isParked){
+            System.out.println("Cant go back please unpark");
+        }
+        else {
+            this.carPos.streetPosition++;
+        }
+        return this.posInfo;
     }
 
     @Override
-
-    // Store every value in the sensorValue array, mean and standard deviation for outliers.
-    // add/subtract standard deviation from mean to remove outliers.
-    public boolean isEmpty() {
+    public int isEmpty() {
         ArrayList<Integer> tempArr = new ArrayList<>();
        for (int i = 0; i < 5; i++){
             Random ran = new Random();
@@ -82,8 +87,8 @@ public class Car implements ParkCar{
             }
         }
         sum = 0;
-        for (int i = 0; i < temp3arr.size(); i++){
-            sum+=temp3arr.get(i);
+        for (Integer aTemp3arr : temp3arr) {
+            sum += aTemp3arr;
         }
         average = sum / temp3arr.size();
 
@@ -96,49 +101,38 @@ public class Car implements ParkCar{
             else {
                 this.isEmptyCounter++;
             }
-            return true;
         }
         else {
             this.isEmptyCounter = 0;
         }
-        return false;
-    }
-
-    @Override
-    public void moveBackward() {
-        if (this.carPos.getPosition()==500){
-            System.out.println("Cant move back");
-        }
-        else {
-            this.carPos.position--;
-        }
+        return (int)average;
     }
 
     @Override
     public void park() {
         if (this.parkingSpaces.contains(this.carPos.getPosition())){
-            this.carPos.status = "parked";
-            this.carPos.position -= 5;
+            this.carPos.isParked = true;
+            this.carPos.streetPosition -= 5;
         }
         else{
             while(!this.parkingSpaces.contains(this.carPos.getPosition())){
                 moveForward();
             }
             if (this.carPos.getPosition() == 0){
-                this.carPos.status = "unParked";
+                this.carPos.isParked = false;
             }
             else {
-                this.carPos.status = "parked";
-                this.carPos.position -= 5;
+                this.carPos.isParked = true;
+                this.carPos.streetPosition -= 5;
             }
         }
     }
 
     @Override
     public void unPark() {
-        if(this.carPos.getStatus().equals("parked")){
-            this.carPos.status = "unParked";
-            this.carPos.position += 5;
+        if(this.carPos.isCarParked()){
+            this.carPos.isParked = false;
+            this.carPos.streetPosition += 5;
         }
         else {
             System.out.println("Car Unparked");
