@@ -3,7 +3,7 @@ import java.util.ArrayList;
 /**
  * Created by nimis on 01/02/2017.
  */
-public interface ParkCar {
+public interface ParkCarInterface {
 
     /**
      Description: This class holds the position of the car and returns whether the car is parked or not.
@@ -89,7 +89,7 @@ public interface ParkCar {
      Description: This method moves the car out of the parking space and moves ahead by 5 metres.
      Pre-condition: Car is parked on the street.
      Post-Condition: The car moves out of the parking space switching isParked variable to false and the car's position
-                     increases by 5.
+     increases by 5.
      Test-cases:
      */
     void unPark();

@@ -4,7 +4,7 @@ import java.util.Random;
 /**
  * Created by Nimish on 28/01/2017.
  */
-public class Car implements ParkCar{
+public class Car implements ParkCarInterface{
     private CarSituation carSituation;
     private PositionInfo posInfo;
     private int isEmptyCounter;
