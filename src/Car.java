@@ -110,9 +110,9 @@ public class Car implements ParkCarInterface{
 
     @Override
     public void park() {
-        if (this.parkingSpaces.contains(this.carSituation.getPosition())){
+        if (this.parkingSpaces.contains(this.carSituation.getPosition() + 5)){
             this.carSituation.isParked = true;
-            this.carSituation.streetPosition -= 5;
+            this.carSituation.streetPosition += 5;
         }
         else{
             while(!this.parkingSpaces.contains(this.carSituation.getPosition())){
@@ -123,7 +123,7 @@ public class Car implements ParkCarInterface{
             }
             else {
                 this.carSituation.isParked = true;
-                this.carSituation.streetPosition -= 5;
+                this.carSituation.streetPosition += 5;
             }
         }
     }
@@ -132,7 +132,7 @@ public class Car implements ParkCarInterface{
     public void unPark() {
         if(this.carSituation.isCarParked()){
             this.carSituation.isParked = false;
-            this.carSituation.streetPosition += 5;
+            this.carSituation.streetPosition -= 5;
         }
         else {
             System.out.println("Car Unparked");
@@ -153,6 +153,15 @@ public class Car implements ParkCarInterface{
     }
     public boolean isCarParked(){
         return this.carSituation.isParked;
+    }
+    public CarSituation getCarSituation(){
+        return this.carSituation;
+    }
+    public PositionInfo getPosInfo(){
+        return this.posInfo;
+    }
+    public int getIsEmptyCounter(){
+        return this.isEmptyCounter;
     }
 
     public static void main (String args[]){

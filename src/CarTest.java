@@ -15,6 +15,11 @@ public class CarTest {
 
     }
 
+    @Test
+        public void testCase1(){
+        car.getCarSituation().isParked = true;
+    }
+
     /*
      * Test Case 1: TC1
      */
