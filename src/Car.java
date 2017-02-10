@@ -144,6 +144,17 @@ public class Car implements ParkCarInterface{
        return this.carSituation;
     }
 
+    public ArrayList<Integer> getParkingSpaces(){
+       return this.parkingSpaces;
+    }
+
+    public int getCarPosition(){
+        return this.carSituation.streetPosition;
+    }
+    public boolean isCarParked(){
+        return this.carSituation.isParked;
+    }
+
     public static void main (String args[]){
        Car car = new Car();
 

@@ -8,7 +8,7 @@ public interface ParkCarInterface {
     /**
      Description: This class holds the position of the car and returns whether the car is parked or not.
      Pre-condition: Car is on the street and in the 0-500 range
-     Post-condtion: None
+     Post-Condition: None
      Test-cases: None
      */
     class CarSituation {

@@ -4,49 +4,84 @@ import static org.junit.Assert.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+
 public class CarTest {
     Car car;
 
     @Before
     public void setUp(){
-
         car = new Car();
 
     }
 
     @Test
-    public void isEmptytest() {
-        boolean result = car.isEmpty(0,10);
-        Assert.assertEquals(true, result);
+    public void testMoveForward() {
+        for (int i = 0; i < 10; i++) {
+            car.moveForward();
+        }
+        int expectedPosition = 490;
+        ArrayList<Integer> expectedParkingSlots = car.getParkingSpaces();
+        expectedParkingSlots.add(495);
 
+        org.junit.Assert.assertEquals(expectedParkingSlots, car.getParkingSpaces());
+        org.junit.Assert.assertEquals(expectedPosition, car.getCarPosition());
     }
 
     @Test
-    public void testmoveForward(){
-        int result = car.moveForward(75);
-        Assert.assertEquals(75, result);
-
+    public void testMoveBackward(){
+        for(int i =0 ; i < 20; i++){
+            car.moveForward();
+        }
+        for(int i =0 ; i < 10; i++){
+            car.moveBackward();
+        }
+        int expectedPosition = 490;
+        Assert.assertEquals(expectedPosition, car.getCarPosition());
     }
 
     @Test
-    public void testmoveBackward(){
-        int result = car.moveBackward(-75);
-        Assert.assertEquals(-75, result);
+    public void testPark(){
+        car.getParkingSpaces().add(200);
+        car.park();
+        Assert.assertEquals(true, car.isCarParked());
     }
 
     @Test
-    public void testpark(){
-        boolean result = car.park(0, 0);
-        Assert.assertEquals(true, result);
-
+    public void testUnPark(){
+        car.getParkingSpaces().add(200);
+        car.park();
+        Assert.assertEquals(true,car.isCarParked());
+        car.unPark();
+        Assert.assertEquals(false,car.isCarParked());
     }
 
     @Test
-    public void testunPark(){
-        boolean result = car.unPark(10, 10);
-        Assert.assertEquals(true, result);
+    /**
+     * Test Case 4: TC4
+     */
+    public void testWhereIs() {
+        for (int i = 0; i < 5; i++) {
+            car.moveForward();
+        }
+        int expectedPosition = 495;
 
+        org.junit.Assert.assertEquals(expectedPosition, car.whereIs().getPosition());
+        org.junit.Assert.assertEquals(false, car.whereIs().isCarParked());
     }
 
-
+    @Test
+    public void isEmptyTest() {
+        int result = car.isEmpty();
+        int i = 4;
+        if(0 < result && result <= 120){
+            i++;
+            org.junit.Assert.assertTrue("The space is empty " , i == 5);
+        }
+        else {
+            i--;
+            org.junit.Assert.assertTrue("The space is not empty " , i == 3);
+        }
+    }
 }
