@@ -53,7 +53,7 @@ public interface ParkCarInterface {
      Description: This method moves forward the car by 1 meter when called and returns the data structure PositionInfo
      Pre-condition: Car is un-parked and in between the range of 0-499.
      Post-condition: The car has moved 1 meter ahead.
-     Test Case: T1
+     Test Case: T9,T10,T11,T12
      */
     PositionInfo moveForward();
 
@@ -62,7 +62,7 @@ public interface ParkCarInterface {
      Description: This method moves the car backwards by 1 meter when called and returns the data structure PositionInfo
      Pre-condition: Car is un-parked and in between the range of 1-500.
      Post-Condition: The car is moved backwards by 1 meter
-     Test Case: T2
+     Test Case: T5,T6,T7,T8
      */
     PositionInfo moveBackward();
 
@@ -71,7 +71,7 @@ public interface ParkCarInterface {
      Description: The method checks if the distance between the car and it's right side is equal or greater to the width of the car.
      Pre-condition: Car is on the street and in the 0-500 range.
      Post-Condition: Returns the distance obtained by the sensors.
-     Test Case: T3
+     Test Case: T2,T3,T4,
      */
     int  isEmpty();
 
@@ -80,7 +80,7 @@ public interface ParkCarInterface {
      Description: This method parks the car if the car is on a parking space otherwise keeps moving forward until it finds a free parking space.
      Pre-condition: Car is un-parked and on the street and in the 0-500 range. There must be at least 1 parking spot on the street.
      Post-Condition: The car is parked turning isParked boolean true.
-     Test Case: T4
+     Test Case: T13,T14
      */
     void park();
 
@@ -90,7 +90,7 @@ public interface ParkCarInterface {
      Pre-condition: Car is parked on the street.
      Post-Condition: The car moves out of the parking space switching isParked variable to false and the car's position
      increases by 5.
-     Test Case: T5
+     Test Case: T1,T15
      */
     void unPark();
 
@@ -99,7 +99,7 @@ public interface ParkCarInterface {
      Description: The method returns the position of the car along with the car's status.
      Pre-condition: Car is on the street and in the 0-500.
      Post-Condition: None
-     Test Case: T6
+     Test Case: T16,T17,T18
      */
     CarSituation whereIs();
 

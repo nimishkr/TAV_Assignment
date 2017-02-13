@@ -7,105 +7,93 @@ import java.util.Random;
 public class Car implements ParkCarInterface{
     private CarSituation carSituation;
     private PositionInfo posInfo;
-    private int isEmptyCounter;
+    public int isEmptyCounter;
     private ArrayList<Integer> parkingSpaces;
+    public int sensorCounter1;
+    public int sensorCounter2;
 
    public Car(){
        this.parkingSpaces = new ArrayList<>();
        carSituation = new CarSituation(500,false);
        this.posInfo = new PositionInfo(this.carSituation.streetPosition,parkingSpaces);
        this.isEmptyCounter = 0;
+       this.sensorCounter1 = 0;
+       this.sensorCounter2 = 0;
    }
 
     @Override
     public PositionInfo moveForward() {
-        if(this.carSituation.getPosition() < 1){
-            System.out.println("Cant go forward");
-        }
         if (this.carSituation.isParked){
             System.out.println("Cant go forward please unpark");
         }
-        else {
-            this.carSituation.streetPosition --;
+        else if(this.carSituation.getPosition() > 0 && this.carSituation.streetPosition <= 500){
+            this.carSituation.streetPosition--;
             isEmpty();
+        }
+        else {
+            System.out.println("Cant go forward");
         }
         return this.posInfo;
     }
     @Override
     public PositionInfo moveBackward() {
-        if (this.carSituation.getPosition()==500){
-            System.out.println("Cant move back");
-        }
         if (this.carSituation.isParked){
             System.out.println("Cant go back please unpark");
         }
-        else {
+        else if (this.carSituation.getPosition() < 500 && this.carSituation.getPosition() >= 0){
             this.carSituation.streetPosition++;
+        }
+        else {
+            System.out.println("The car cannot go back");
         }
         return this.posInfo;
     }
 
     @Override
     public int isEmpty() {
-        ArrayList<Integer> tempArr = new ArrayList<>();
-       for (int i = 0; i < 5; i++){
-            Random ran = new Random();
-            Random ran2 = new Random();
-            int sensor1 = ran.nextInt(200);
-            tempArr.add(sensor1);
-            int sensor2 = ran2.nextInt(200);
-            tempArr.add(sensor2);
+       int average = 0;
+       int sensor1Sum = 0;
+       int sensor2Sum = 0;
+       for (int i = 0; i < 5; i++) {
+           Random ran = new Random();
+           Random ran2 = new Random();
+           this.sensorCounter1 = 0;
+           this.sensorCounter2 = 0;
+           int random1 = ran.nextInt(250);
+           if (random1 > 200) {
+               sensorCounter1++;
+           }
+           int random2 = ran2.nextInt(250);
+           if (random2 > 200) {
+               sensorCounter2++;
+           }
+           sensor1Sum += random1;
+           sensor2Sum += random2;
+       }
+        if (sensorCounter1 > 2 && sensorCounter2 < 3){
+            average = sensor2Sum / 5;
+           }
+        else if (sensorCounter1 < 3 && sensorCounter2 > 2){
+            average = sensor1Sum / 5;
         }
-        ArrayList<Double> temp2Arr = new ArrayList<>();
-        int sum = 0;
-        double mean;
-        for (int i = 0; i < 10; i++){
-            sum+=tempArr.get(i);
+        else if (sensorCounter1 > 2 && sensorCounter2 > 2){
+            average = 0;
         }
-        mean = sum / 10;
-        for (int i = 0; i < 10; i++){
-            temp2Arr.add(Math.pow(tempArr.get(i) - mean,2));
+        else {
+            average = ((sensor1Sum / 5) + (sensor2Sum / 5)) / 2;
         }
-        sum = 0;
-        for (int i = 0; i < 10;i++){
-            sum+=temp2Arr.get(i);
-        }
-        double average = sum / 10;
-        double stanDistr = Math.sqrt(average);
-
-        ArrayList<Integer> temp3arr = new ArrayList<>();
-        for (int i = 0; i < 10; i++){
-            if (tempArr.get(i) < mean){
-                if (mean - stanDistr - 5 < tempArr.get(i)){
-                    temp3arr.add(tempArr.get(i));
-                }
-            }
-            else if (tempArr.get(i) > mean){
-                if (mean + stanDistr + 5 > tempArr.get(i)){
-                    temp3arr.add(tempArr.get(i));
-                }
-            }
-        }
-        sum = 0;
-        for (Integer aTemp3arr : temp3arr) {
-            sum += aTemp3arr;
-        }
-        average = sum / temp3arr.size();
-
-        if (average < 120){
-            if (this.isEmptyCounter == 4){
+        if (average > 100) {
+            if (this.isEmptyCounter == 4) {
                 this.isEmptyCounter = 0;
                 parkingSpaces.add(this.carSituation.getPosition());
                 System.out.println("parking space at " + this.carSituation.getPosition());
-            }
-            else {
+            } else {
                 this.isEmptyCounter++;
+                }
+            } else {
+                this.isEmptyCounter = 0;
             }
-        }
-        else {
-            this.isEmptyCounter = 0;
-        }
-        return (int)average;
+            return average;
     }
 
     @Override
@@ -117,6 +105,7 @@ public class Car implements ParkCarInterface{
         else{
             while(!this.parkingSpaces.contains(this.carSituation.getPosition())){
                 moveForward();
+                if (this.carSituation.streetPosition == 0) break;
             }
             if (this.carSituation.getPosition() == 0){
                 this.carSituation.isParked = false;
@@ -141,6 +130,7 @@ public class Car implements ParkCarInterface{
 
     @Override
     public CarSituation whereIs() {
+
        return this.carSituation;
     }
 
