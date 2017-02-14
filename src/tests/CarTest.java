@@ -1,11 +1,13 @@
+package tests;
+
 
 import static org.junit.Assert.*;
 
+import Controller.Car;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
 
 public class CarTest {
     Car car;

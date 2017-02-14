@@ -1,3 +1,5 @@
+package Controller;
+
 import java.util.ArrayList;
 
 /**
@@ -12,8 +14,8 @@ public interface ParkCarInterface {
      Test-cases: None
      */
     class CarSituation {
-        int streetPosition;
-        boolean isParked;
+        public int streetPosition;
+        public boolean isParked;
 
         public CarSituation(int streetPosition, boolean isParked){
             this.streetPosition = streetPosition;

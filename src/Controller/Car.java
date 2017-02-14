@@ -1,10 +1,13 @@
+package Controller;
+
+import Controller.ParkCarInterface;
 import java.util.ArrayList;
 import java.util.Random;
 
 /**
  * Created by Nimish on 28/01/2017.
  */
-public class Car implements ParkCarInterface{
+public class Car implements ParkCarInterface {
     private CarSituation carSituation;
     private PositionInfo posInfo;
     public int isEmptyCounter;
@@ -12,14 +15,14 @@ public class Car implements ParkCarInterface{
     public int sensorCounter1;
     public int sensorCounter2;
 
-   public Car(){
-       this.parkingSpaces = new ArrayList<>();
-       carSituation = new CarSituation(500,false);
-       this.posInfo = new PositionInfo(this.carSituation.streetPosition,parkingSpaces);
-       this.isEmptyCounter = 0;
-       this.sensorCounter1 = 0;
-       this.sensorCounter2 = 0;
-   }
+    public Car(){
+        this.parkingSpaces = new ArrayList<>();
+        carSituation = new CarSituation(500,false);
+        this.posInfo = new PositionInfo(this.carSituation.streetPosition,parkingSpaces);
+        this.isEmptyCounter = 0;
+        this.sensorCounter1 = 0;
+        this.sensorCounter2 = 0;
+    }
 
     @Override
     public PositionInfo moveForward() {
@@ -51,28 +54,28 @@ public class Car implements ParkCarInterface{
 
     @Override
     public int isEmpty() {
-       int average = 0;
-       int sensor1Sum = 0;
-       int sensor2Sum = 0;
-       for (int i = 0; i < 5; i++) {
-           Random ran = new Random();
-           Random ran2 = new Random();
-           this.sensorCounter1 = 0;
-           this.sensorCounter2 = 0;
-           int random1 = ran.nextInt(250);
-           if (random1 > 200) {
-               sensorCounter1++;
-           }
-           int random2 = ran2.nextInt(250);
-           if (random2 > 200) {
-               sensorCounter2++;
-           }
-           sensor1Sum += random1;
-           sensor2Sum += random2;
-       }
+        int average = 0;
+        int sensor1Sum = 0;
+        int sensor2Sum = 0;
+        for (int i = 0; i < 5; i++) {
+            Random ran = new Random();
+            Random ran2 = new Random();
+            this.sensorCounter1 = 0;
+            this.sensorCounter2 = 0;
+            int random1 = ran.nextInt(250);
+            if (random1 > 200) {
+                sensorCounter1++;
+            }
+            int random2 = ran2.nextInt(250);
+            if (random2 > 200) {
+                sensorCounter2++;
+            }
+            sensor1Sum += random1;
+            sensor2Sum += random2;
+        }
         if (sensorCounter1 > 2 && sensorCounter2 < 3){
             average = sensor2Sum / 5;
-           }
+        }
         else if (sensorCounter1 < 3 && sensorCounter2 > 2){
             average = sensor1Sum / 5;
         }
@@ -89,11 +92,11 @@ public class Car implements ParkCarInterface{
                 System.out.println("parking space at " + this.carSituation.getPosition());
             } else {
                 this.isEmptyCounter++;
-                }
-            } else {
-                this.isEmptyCounter = 0;
             }
-            return average;
+        } else {
+            this.isEmptyCounter = 0;
+        }
+        return average;
     }
 
     @Override
@@ -131,11 +134,11 @@ public class Car implements ParkCarInterface{
     @Override
     public CarSituation whereIs() {
 
-       return this.carSituation;
+        return this.carSituation;
     }
 
     public ArrayList<Integer> getParkingSpaces(){
-       return this.parkingSpaces;
+        return this.parkingSpaces;
     }
 
     public int getCarPosition(){
@@ -155,10 +158,10 @@ public class Car implements ParkCarInterface{
     }
 
     public static void main (String args[]){
-       Car car = new Car();
+        Car car = new Car();
 
-       for (int i = 0; i < 100; i++){
-           car.moveForward();
-       }
+        for (int i = 0; i < 100; i++){
+            car.moveForward();
+        }
     }
 }
