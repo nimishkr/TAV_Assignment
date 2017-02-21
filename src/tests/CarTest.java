@@ -57,6 +57,7 @@ public class CarTest {
             car.moveForward();
             if (car.isCarParked()){
                 Assert.assertEquals(0,car.getIsEmptyCounter());
+                System.out.println("sup");
             }
         }
     }

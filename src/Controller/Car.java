@@ -1,15 +1,17 @@
 package Controller;
 
-import Controller.ParkCarInterface;
+import Model.ActuatorInterface;
+import Model.UltraSonicInterface;
+
 import java.util.ArrayList;
 import java.util.Random;
 
 /**
  * Created by Nimish on 28/01/2017.
  */
-public class Car implements ParkCarInterface {
+public class Car implements ParkCarInterface, ActuatorInterface, UltraSonicInterface {
     private CarSituation carSituation;
-    private PositionInfo posInfo;
+    public PositionInfo posInfo;
     public int isEmptyCounter;
     private ArrayList<Integer> parkingSpaces;
     public int sensorCounter1;
@@ -58,20 +60,20 @@ public class Car implements ParkCarInterface {
         int sensor1Sum = 0;
         int sensor2Sum = 0;
         for (int i = 0; i < 5; i++) {
-            Random ran = new Random();
+            Random ran1 = new Random();
             Random ran2 = new Random();
             this.sensorCounter1 = 0;
             this.sensorCounter2 = 0;
-            int random1 = ran.nextInt(250);
-            if (random1 > 200) {
+            int sensor1Val = ran1.nextInt(250);
+            int sensor2Val = ran2.nextInt(250);
+            if (sensor1Val > 200) {
                 sensorCounter1++;
             }
-            int random2 = ran2.nextInt(250);
-            if (random2 > 200) {
+            if (sensor2Val > 200) {
                 sensorCounter2++;
             }
-            sensor1Sum += random1;
-            sensor2Sum += random2;
+            sensor1Sum += sensor1Val;
+            sensor2Sum += sensor2Val;
         }
         if (sensorCounter1 > 2 && sensorCounter2 < 3){
             average = sensor2Sum / 5;
@@ -157,11 +159,4 @@ public class Car implements ParkCarInterface {
         return this.isEmptyCounter;
     }
 
-    public static void main (String args[]){
-        Car car = new Car();
-
-        for (int i = 0; i < 100; i++){
-            car.moveForward();
-        }
-    }
 }
