@@ -1,6 +1,8 @@
 package Controller;
 
+import Model.Actuator;
 import Model.ActuatorInterface;
+import Model.UltraSonic;
 import Model.UltraSonicInterface;
 
 import java.util.ArrayList;
@@ -9,11 +11,14 @@ import java.util.Random;
 /**
  * Created by Nimish on 28/01/2017.
  */
-public class Car implements ParkCarInterface, ActuatorInterface, UltraSonicInterface {
+public class Car implements ParkCarInterface {
     private CarSituation carSituation;
     public PositionInfo posInfo;
     public int isEmptyCounter;
     private ArrayList<Integer> parkingSpaces;
+    private UltraSonic sensor1;
+    private UltraSonic sensor2;
+    private Actuator actuators;
     public int sensorCounter1;
     public int sensorCounter2;
 
@@ -24,6 +29,9 @@ public class Car implements ParkCarInterface, ActuatorInterface, UltraSonicInter
         this.isEmptyCounter = 0;
         this.sensorCounter1 = 0;
         this.sensorCounter2 = 0;
+        sensor1 = new UltraSonic();
+        sensor2 = new UltraSonic();
+        actuators = new Actuator();
     }
 
     @Override
@@ -32,7 +40,8 @@ public class Car implements ParkCarInterface, ActuatorInterface, UltraSonicInter
             System.out.println("Cant go forward please unpark");
         }
         else if(this.carSituation.getPosition() > 0 && this.carSituation.streetPosition <= 500){
-            this.carSituation.streetPosition--;
+            int newPos = actuators.moveForward(this.carSituation.getPosition());
+            this.carSituation.streetPosition = newPos;
             isEmpty();
         }
         else {
@@ -46,7 +55,8 @@ public class Car implements ParkCarInterface, ActuatorInterface, UltraSonicInter
             System.out.println("Cant go back please unpark");
         }
         else if (this.carSituation.getPosition() < 500 && this.carSituation.getPosition() >= 0){
-            this.carSituation.streetPosition++;
+            int newPos = actuators.moveBackward(this.carSituation.getPosition());
+            this.carSituation.streetPosition = newPos;
         }
         else {
             System.out.println("The car cannot go back");
@@ -60,12 +70,10 @@ public class Car implements ParkCarInterface, ActuatorInterface, UltraSonicInter
         int sensor1Sum = 0;
         int sensor2Sum = 0;
         for (int i = 0; i < 5; i++) {
-            Random ran1 = new Random();
-            Random ran2 = new Random();
             this.sensorCounter1 = 0;
             this.sensorCounter2 = 0;
-            int sensor1Val = ran1.nextInt(250);
-            int sensor2Val = ran2.nextInt(250);
+            int sensor1Val = sensor1.getDistance();
+            int sensor2Val = sensor2.getDistance();
             if (sensor1Val > 200) {
                 sensorCounter1++;
             }
@@ -88,6 +96,7 @@ public class Car implements ParkCarInterface, ActuatorInterface, UltraSonicInter
             average = ((sensor1Sum / 5) + (sensor2Sum / 5)) / 2;
         }
         if (average > 100) {
+            System.out.println("parking counter is " + this.isEmptyCounter + " at " + this.getCarPosition());
             if (this.isEmptyCounter == 4) {
                 this.isEmptyCounter = 0;
                 parkingSpaces.add(this.carSituation.getPosition());
@@ -103,7 +112,7 @@ public class Car implements ParkCarInterface, ActuatorInterface, UltraSonicInter
 
     @Override
     public void park() {
-        if (this.parkingSpaces.contains(this.carSituation.getPosition() + 5)){
+        if (this.parkingSpaces.contains(this.carSituation.getPosition())){
             this.carSituation.isParked = true;
             this.carSituation.streetPosition += 5;
         }

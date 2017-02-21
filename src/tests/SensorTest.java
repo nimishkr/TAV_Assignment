@@ -28,14 +28,14 @@ public class SensorTest {
 
     @Test
     public void getDistanceTest1(){
-        ultraSonic.isEmpty();
-        Mockito.verify(ultraSonic,times(1)).isEmpty();
-        Assert.assertTrue((0 <= ultraSonic.isEmpty() && ultraSonic.isEmpty() <= 250));
+        ultraSonic.getDistance();
+        Mockito.verify(ultraSonic,times(1)).getDistance();
+        Assert.assertTrue((0 <= ultraSonic.getDistance() && ultraSonic.getDistance() <= 250));
     }
     @Test
     public void getDistanceTest2() {
-        Mockito.when(ultraSonic.isEmpty()).thenReturn(0);
-        Assert.assertEquals(0, ultraSonic.isEmpty());
+        Mockito.when(ultraSonic.getDistance()).thenReturn(0);
+        Assert.assertEquals(0, ultraSonic.getDistance());
 
     }
 
