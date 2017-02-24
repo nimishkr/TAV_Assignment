@@ -4,16 +4,30 @@ package tests;
 import static org.junit.Assert.*;
 
 import Controller.Car;
+import Model.ActuatorInterface;
+import Model.UltraSonicInterface;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+
+import java.nio.channels.AcceptPendingException;
 
 
 public class CarTest {
+    @Mock
+    private ActuatorInterface actuator;
+
+    @Mock
+    private UltraSonicInterface sensor1;
+
+    @Mock
+    private UltraSonicInterface sensor2;
+
     Car car;
     @Before
     public void setUp(){
-        car = new Car();
+        car = new Car(sensor1,sensor2,actuator);
 
     }
     // TC 1

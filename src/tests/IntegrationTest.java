@@ -1,7 +1,6 @@
 package tests;
 
 import Controller.Car;
-import Controller.ParkCarInterface;
 import Model.ActuatorInterface;
 import Model.UltraSonicInterface;
 import org.junit.Assert;
@@ -9,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.*;
 
-import java.util.ArrayList;
+import java.io.*;
 
 /**
  * Created by nimis on 20/02/2017.
@@ -29,81 +28,69 @@ public class IntegrationTest {
 
     private int minSpacesCounter = 500;
     private int lastSpaceCounter = 0;
-    private int minSpacePosition = 0;
+    private int minSpacePosition = 500;
 
     @Before
     public void setUp(){
-        testCar = new Car();
         sensor1 = Mockito.mock(UltraSonicInterface.class);
         sensor2 = Mockito.mock(UltraSonicInterface.class);
         actuator = Mockito.mock(ActuatorInterface.class);
+        testCar = new Car(sensor1,sensor2,actuator);
+        testCar.getPosInfo().setStreetPosition(500);
         MockitoAnnotations.initMocks(this);
+        File file = new File("parkingspace.txt");
+        String line;
+        try (BufferedReader read = new BufferedReader(new FileReader(file))){
+            line = read.readLine();
+            int previousNum = 500;
+            while (line != null && !line.equals("")){
+                int position = Integer.parseInt(line);
+                if (previousNum - position > 1){
+                    if (lastSpaceCounter > 4){
+                        if (lastSpaceCounter < minSpacesCounter){
+                            minSpacesCounter = lastSpaceCounter;
+                            minSpacePosition = previousNum;
+                        }
+                    }
+                    lastSpaceCounter = 1;
+                    previousNum = position;
+                }
+                else{
+                    lastSpaceCounter++;
+                    System.out.println("Last space counter is " + lastSpaceCounter);
+                    previousNum = position;
+                }
+
+                Mockito.when(sensor1.getDistance(position)).thenReturn(150);
+                Mockito.when(sensor2.getDistance(position)).thenReturn(150);
+                line = read.readLine();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void IntegrationTest1(){
-        for (int i = 500; i >= 0; i--) {
-            if (i == 0) {
-                Mockito.when(actuator.moveForward()).thenReturn(testCar.getPosInfo());
-            } else {
-                testCar.getPosInfo().decreasePosition();
-                Mockito.when(actuator.moveForward()).thenReturn(testCar.getPosInfo());
-            }
-        }
-        for (int i = 500; i > 0; i--){
-            if (i > 350 && i < 354){
-                lastSpaceCounter++;
-                Mockito.when(sensor1.isEmpty(i)).thenReturn(120);
-                Mockito.when(sensor2.isEmpty(i)).thenReturn(120);
-                sensor1.isEmpty(i);
-                sensor2.isEmpty(i);
-                actuator.moveForward();
-            }
-            else if (i > 250 && i < 256){
-                lastSpaceCounter++;
-                Mockito.when(sensor1.isEmpty(i)).thenReturn(150);
-                Mockito.when(sensor2.isEmpty(i)).thenReturn(150);
-                sensor1.isEmpty(i);
-                sensor2.isEmpty(i);
-                actuator.moveForward();
-            }
-            else if (i > 150 && i < 159){
-                lastSpaceCounter++;
-                Mockito.when(sensor1.isEmpty(i)).thenReturn(120);
-                Mockito.when(sensor2.isEmpty(i)).thenReturn(120);
-                sensor1.isEmpty(i);
-                sensor2.isEmpty(i);
-                actuator.moveForward();
-            }
-            else {
-                if (lastSpaceCounter > 0 && lastSpaceCounter < 5){
-                    lastSpaceCounter = 0;
-                }
-               else if (lastSpaceCounter!= 0 && lastSpaceCounter > 4 && lastSpaceCounter < minSpacesCounter){
-                    minSpacesCounter = lastSpaceCounter;
-                    lastSpaceCounter = 0;
-                   minSpacePosition = testCar.getCarPosition();
-                }
-                Mockito.when(sensor1.isEmpty(i)).thenReturn(20);
-                Mockito.when(sensor2.isEmpty(i)).thenReturn(20);
-                sensor1.isEmpty(i);
-                sensor2.isEmpty(i);
-                actuator.moveForward();
-            }
+        for (int i = 500; i >= 0; i--){
+            Mockito.when(actuator.moveForward()).thenReturn(testCar.getPosInfo());
+            testCar.moveForward();
         }
         for(int i = 0; i < minSpacePosition; i++){
-            testCar.getPosInfo().increasePosition();
             Mockito.when(actuator.moveBackward()).thenReturn(testCar.getPosInfo());
-            actuator.moveBackward();
+            testCar.moveBackward();
         }
-        //Assert.assertEquals(250,testCar.getCarPosition());
+        Assert.assertEquals(251,testCar.getCarPosition());
         testCar.park();
         Assert.assertTrue(testCar.isCarParked());
         testCar.unPark();
         for (int i = testCar.getCarPosition(); i >= 0; i--){
-            Mockito.when(sensor1.isEmpty(i)).thenReturn(20);
-            Mockito.when(sensor2.isEmpty(i)).thenReturn(20);
-            actuator.moveForward();
+            Mockito.when(sensor1.getDistance(i)).thenReturn(20);
+            Mockito.when(sensor2.getDistance(i)).thenReturn(20);
+
+            testCar.moveForward();
         }
         System.out.println(testCar.getCarPosition());
 
