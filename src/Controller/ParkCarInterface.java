@@ -42,17 +42,8 @@ public interface ParkCarInterface {
             this.streetPosition = streetPosition;
             this.parkingSpaces = parkingSpaces;
         }
-        public int getPosition(){
-            return this.streetPosition;
-        }
-        public ArrayList<Integer> getParkingSpaces(){
-            return this.parkingSpaces;
-        }
         public void setStreetPosition(int position){
             this.streetPosition = position;
-        }
-        public void decreasePosition(){
-            this.streetPosition--;
         }
         public void increasePosition(){
             this.streetPosition++;

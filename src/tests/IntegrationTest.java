@@ -11,7 +11,7 @@ import org.mockito.*;
 import java.io.*;
 
 /**
- * Created by nimis on 20/02/2017.
+ * Created by Nimish on 20/02/2017.
  */
 public class IntegrationTest {
     @Mock
@@ -38,6 +38,10 @@ public class IntegrationTest {
         testCar = new Car(sensor1,sensor2,actuator);
         testCar.getPosInfo().setStreetPosition(500);
         MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    public void IntegrationTestScenario1(){
         File file = new File("parkingspace.txt");
         String line;
         try (BufferedReader read = new BufferedReader(new FileReader(file))){
@@ -70,10 +74,6 @@ public class IntegrationTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @Test
-    public void IntegrationTest1(){
         for (int i = 500; i >= 0; i--){
             Mockito.when(actuator.moveForward()).thenReturn(testCar.getPosInfo());
             testCar.moveForward();
@@ -93,7 +93,32 @@ public class IntegrationTest {
             testCar.moveForward();
         }
         System.out.println(testCar.getCarPosition());
+    }
 
+    @Test
+    public void IntegrationTestScenario2(){
+        testCar.moveBackward();
+        testCar.unPark();
+        Assert.assertFalse(testCar.isCarParked());
+
+        for (int i = 359; i > 354; i--){
+            Mockito.when(sensor1.getDistance(i)).thenReturn(150);
+            Mockito.when(sensor2.getDistance(i)).thenReturn(150);
+        }
+        testCar.park();
+        Assert.assertTrue(testCar.isCarParked());
+        Assert.assertEquals(360,testCar.whereIs().getPosition());
+        testCar.moveForward();
+        Assert.assertEquals(360,testCar.whereIs().getPosition());
+        testCar.moveBackward();
+        Assert.assertEquals(360,testCar.whereIs().getPosition());
+        testCar.unPark();
+        Assert.assertFalse(testCar.isCarParked());
+        for (int i = testCar.getCarPosition(); i > 0; i--){
+            testCar.moveForward();
+        }
+        System.out.println("Car position " + testCar.getCarPosition());
+        testCar.park();
 
     }
 }

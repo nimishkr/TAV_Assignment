@@ -145,7 +145,6 @@ public class Car implements ParkCarInterface {
 
     @Override
     public CarSituation whereIs() {
-
         return this.carSituation;
     }
 
