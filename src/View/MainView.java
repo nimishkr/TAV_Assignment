@@ -9,7 +9,7 @@ import java.util.Scanner;
  */
 public class MainView {
 
-    public static void main (String args[]){
+    /*public static void main (String args[]){
         System.out.println("*************************************");
         System.out.println("Welcome to the TAV Car Assignment");
         System.out.println("**************************************");
@@ -25,5 +25,5 @@ public class MainView {
         System.out.println("nice mate ");
 
         Car car = new Car();
-    }
+    }*/
 }

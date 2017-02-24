@@ -1,8 +1,6 @@
 package Controller;
 
-import Model.Actuator;
 import Model.ActuatorInterface;
-import Model.UltraSonic;
 import Model.UltraSonicInterface;
 
 import java.util.ArrayList;
@@ -16,9 +14,9 @@ public class Car implements ParkCarInterface {
     public PositionInfo posInfo;
     public int isEmptyCounter;
     private ArrayList<Integer> parkingSpaces;
-    private UltraSonic sensor1;
-    private UltraSonic sensor2;
-    private Actuator actuators;
+    private UltraSonicInterface sensor1;
+    private UltraSonicInterface sensor2;
+    private ActuatorInterface actuators;
     public int sensorCounter1;
     public int sensorCounter2;
 
@@ -29,9 +27,6 @@ public class Car implements ParkCarInterface {
         this.isEmptyCounter = 0;
         this.sensorCounter1 = 0;
         this.sensorCounter2 = 0;
-        sensor1 = new UltraSonic();
-        sensor2 = new UltraSonic();
-        actuators = new Actuator();
     }
 
     @Override
@@ -40,8 +35,7 @@ public class Car implements ParkCarInterface {
             System.out.println("Cant go forward please unpark");
         }
         else if(this.carSituation.getPosition() > 0 && this.carSituation.streetPosition <= 500){
-            int newPos = actuators.moveForward(this.carSituation.getPosition());
-            this.carSituation.streetPosition = newPos;
+            this.carSituation.streetPosition--;
             isEmpty();
         }
         else {
@@ -55,8 +49,7 @@ public class Car implements ParkCarInterface {
             System.out.println("Cant go back please unpark");
         }
         else if (this.carSituation.getPosition() < 500 && this.carSituation.getPosition() >= 0){
-            int newPos = actuators.moveBackward(this.carSituation.getPosition());
-            this.carSituation.streetPosition = newPos;
+            this.carSituation.streetPosition ++;
         }
         else {
             System.out.println("The car cannot go back");
@@ -72,8 +65,10 @@ public class Car implements ParkCarInterface {
         for (int i = 0; i < 5; i++) {
             this.sensorCounter1 = 0;
             this.sensorCounter2 = 0;
-            int sensor1Val = sensor1.getDistance();
-            int sensor2Val = sensor2.getDistance();
+            Random rand1 = new Random();
+            Random rand2 = new Random();
+            int sensor1Val = rand1.nextInt(250);
+            int sensor2Val = rand2.nextInt(250);
             if (sensor1Val > 200) {
                 sensorCounter1++;
             }
@@ -166,6 +161,21 @@ public class Car implements ParkCarInterface {
     }
     public int getIsEmptyCounter(){
         return this.isEmptyCounter;
+    }
+
+    public static void main(String[] args) {
+
+        Car car = new Car();
+
+        for (int i = 0; i < 15; i++) {
+            car.moveForward();
+
+        }
+        car.moveBackward();
+        car.park();
+        car.whereIs();
+        car.unPark();
+
     }
 
 }
